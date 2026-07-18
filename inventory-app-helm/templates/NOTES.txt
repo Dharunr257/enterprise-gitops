@@ -1,0 +1,45 @@
+Thank you for installing the Inventory Management System.
+
+Release Name:
+{{ .Release.Name }}
+
+Namespace:
+{{ .Release.Namespace }}
+
+Chart:
+{{ .Chart.Name }}
+
+Version:
+{{ .Chart.Version }}
+
+To check the deployment:
+
+kubectl get all -n {{ .Values.namespace }}
+
+To check the pods:
+
+kubectl get pods -n {{ .Values.namespace }}
+
+To check the services:
+
+kubectl get svc -n {{ .Values.namespace }}
+
+To check the ingress:
+
+kubectl get ingress -n {{ .Values.namespace }}
+
+To describe the ingress:
+
+kubectl describe ingress inventory-ingress -n {{ .Values.namespace }}
+
+To view backend logs:
+
+kubectl logs -l app=ims-backend -n {{ .Values.namespace }}
+
+To view frontend logs:
+
+kubectl logs -l app=ims-frontend -n {{ .Values.namespace }}
+
+To view mysql logs:
+
+kubectl logs -l app=mysql -n {{ .Values.namespace }}

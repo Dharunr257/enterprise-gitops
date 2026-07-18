@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ims-backend
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: ims-backend
+    {{- include "inventory-app.labels" . | nindent 4 }}
+
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+
+  revisionHistoryLimit: 10
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: ims-backend
+
+  template:
+    metadata:
+      labels:
+        app: ims-backend
+        {{- include "inventory-app.labels" . | nindent 8 }}
+
+    spec:
+
+      containers:
+        - name: ims-backend
+
+          image: "{{ include "inventory-app.backendImage" . }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+
+          ports:
+            - containerPort: 5000
+
+          envFrom:
+            - configMapRef:
+                name: backend-config
+
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USER
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+
+          resources:
+            requests:
+              cpu: {{ .Values.resources.backend.requests.cpu }}
+              memory: {{ .Values.resources.backend.requests.memory }}
+
+            limits:
+              cpu: {{ .Values.resources.backend.limits.cpu }}
+              memory: {{ .Values.resources.backend.limits.memory }}
+
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            failureThreshold: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: ims-backend

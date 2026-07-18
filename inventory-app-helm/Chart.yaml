@@ -1,0 +1,32 @@
+apiVersion: v2
+
+name: inventory-app
+description: Enterprise Inventory Management System Helm Chart
+
+type: application
+
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - inventory
+  - react
+  - nodejs
+  - mysql
+  - kubernetes
+  - eks
+  - ecr
+  - helm
+  - argocd
+  - gitops
+
+home: https://github.com/Dharunr257
+
+sources:
+  - https://github.com/Dharunr257
+
+maintainers:
+  - name: Dharun R
+
+annotations:
+  category: Enterprise Applications

@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ims-frontend
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: ims-frontend
+    {{- include "inventory-app.labels" . | nindent 4 }}
+
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+
+  revisionHistoryLimit: 10
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: ims-frontend
+
+  template:
+    metadata:
+      labels:
+        app: ims-frontend
+        {{- include "inventory-app.labels" . | nindent 8 }}
+
+    spec:
+      containers:
+        - name: ims-frontend
+
+          image: "{{ include "inventory-app.frontendImage" . }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+
+          ports:
+            - containerPort: 80
+
+          resources:
+            requests:
+              cpu: {{ .Values.resources.frontend.requests.cpu }}
+              memory: {{ .Values.resources.frontend.requests.memory }}
+
+            limits:
+              cpu: {{ .Values.resources.frontend.limits.cpu }}
+              memory: {{ .Values.resources.frontend.limits.memory }}
+
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            failureThreshold: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: ims-frontend

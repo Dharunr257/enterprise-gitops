@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: inventory-ingress
+  namespace: inventory-system
+
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+spec:
+
+  ingressClassName: nginx
+
+  rules:
+    - host: inventory.local
+
+      http:
+        paths:
+
+          - path: /
+            pathType: Prefix
+
+            backend:
+              service:
+                name: ims-frontend-service
+                port:
+                  number: 80
+
+          - path: /api
+            pathType: Prefix
+
+            backend:
+              service:
+                name: ims-backend-service
+                port:
+                  number: 5000
