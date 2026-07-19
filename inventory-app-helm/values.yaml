@@ -1,6 +1,8 @@
 global:
   imageRegistry: 208851973471.dkr.ecr.us-east-1.amazonaws.com
+
 namespace: inventory-system
+
 frontend:
   replicaCount: 1
   image:
@@ -9,6 +11,7 @@ frontend:
   service:
     type: ClusterIP
     port: 80
+
 backend:
   replicaCount: 1
   image:
@@ -17,6 +20,7 @@ backend:
   service:
     type: ClusterIP
     port: 5000
+
 mysql:
   image:
     repository: mysql
@@ -36,10 +40,11 @@ mysql:
     username: inventory_user
     password: Inventory@123
     rootPassword: Root@123
+
 ingress:
   enabled: true
   className: nginx
-  host: inventory.local
+
 resources:
   frontend:
     requests:
@@ -48,6 +53,7 @@ resources:
     limits:
       cpu: 300m
       memory: 256Mi
+
   backend:
     requests:
       cpu: 250m
@@ -55,6 +61,7 @@ resources:
     limits:
       cpu: 500m
       memory: 512Mi
+
   mysql:
     requests:
       cpu: 250m
