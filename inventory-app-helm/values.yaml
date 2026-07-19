@@ -2,7 +2,7 @@ global:
   imageRegistry: 208851973471.dkr.ecr.us-east-1.amazonaws.com
 namespace: inventory-system
 frontend:
-  replicaCount: 2
+  replicaCount: 1
   image:
     tag: f42818c
     pullPolicy: Always
@@ -10,7 +10,7 @@ frontend:
     type: ClusterIP
     port: 80
 backend:
-  replicaCount: 2
+  replicaCount: 1
   image:
     tag: f42818c
     pullPolicy: Always
