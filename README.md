@@ -218,7 +218,10 @@ The final CI step updates the image tag in this repository's `inventory-app-helm
 <p align="center">
   <img src="./screenshots/eks-cluster-created.png" alt="Amazon EKS cluster created via Terraform" width="100%">
 </p>
-
+---
+<p align="center">
+  <img src="./screenshots/vpc-created.png" alt="Amazon EKS cluster created via Terraform" width="100%">
+</p>
 ---
 
 ### Step 3 — Define the Argo CD Application
@@ -264,7 +267,12 @@ spec:
 ```
 
 <p align="center">
-  <img src="./screenshots/argocd-app-synced.png" alt="Argo CD Application synced and healthy" width="100%">
+  <img src="./screenshots/argocd-app-synced-1.png" alt="Argo CD Application synced and healthy" width="100%">
+</p>
+
+---
+<p align="center">
+  <img src="./screenshots/argocd-app-synced-2.png" alt="Argo CD Application synced and healthy" width="100%">
 </p>
 
 ---
@@ -346,9 +354,13 @@ Once the `Application` is applied to the `argocd` namespace, Argo CD watches thi
 A code change in `enterprise-inventory-app` triggers CI → new image tag → Argo CD detects the change → automated sync → rollout on EKS, with zero manual cluster access.
 
 <p align="center">
-  <img src="./screenshots/argocd-rollout-update.png" alt="Argo CD syncing an application update" width="100%">
+  <img src="./screenshots/argocd-rollout-update-1.png" alt="Argo CD syncing an application update" width="100%">
 </p>
-
+---
+<p align="center">
+  <img src="./screenshots/argocd-rollout-update-2.png" alt="Argo CD syncing an application update" width="100%">
+</p>
+---
 <p align="center">
   <img src="./screenshots/application-dashboard-updated.png" alt="Application dashboard after the update rolled out" width="100%">
 </p>
